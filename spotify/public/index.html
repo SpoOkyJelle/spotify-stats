@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Spotify stats</title>
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png">
+  </head>
+
+  <body>
+    <div id="square_1" class="background_square"></div>
+    <div id="square_2" class="background_square"></div>
+    <div id="square_3" class="background_square"></div>
+
+
+    <div class="main">
+      <div class="container">
+        <header class="d-flex justify-content-between">
+            <img style="padding: 0;" class="col-md-3" id="logo" src="./img/favicon.png" alt="">
+  
+            <div class="row" id="user_profile">
+              <img id="profilePic" src="">
+              <h2 id="userName"></h2>
+              <div id="signout">
+                  <p id="signout_text"><a href="/logout">Sign out</a></p>
+              </div>
+            </div>
+        </header>
+      </div>
+  
+      <div class="container">
+        <div id="user_statistics" class="title_block main_block row pt-4">
+          <div class="col-md-6">
+            <p>Country:</p>
+            <p>Product:</p>
+            <p>Followers:</p>
+            <p>Email:</p>
+          </div>
+          <div class="col-md-6">
+            <p id="country"></p>
+            <p id="productType"></p>
+            <p id="totalFollowers"></p>
+            <p id="email"></p>
+          </div>
+        </div>
+      </div>
+  
+      <div class="container mt-4 bottom_div">
+        <div class="d-flex justify-content-between user_track_info pt-4">
+          <div id="grid_left" class="main_block">
+            <h2 class="mb-3">Tracks</h2>
+            <div class="toptracks"></div>
+          </div>
+          <div id="grid_right" class="main_block">
+            <h2 class="mb-3">Artists</h2>
+            <div class="topartists"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  
+    <!-- Login screen -->
+    <div class="container background-dark height-100 login_container text-center">
+      <div id="header_container" class="row justify-content-center">
+        <div class="intro d-flex justify-content-between">
+          <img src="./img/favicon.png">
+          <h1 id="main_title">Spotify Stats</h1>
+        </div>
+        <h2 id="sub_title">A free webapp which gives you insights into how you listen to music</h2>
+      </div>
+      <div id="button">
+        <a class="button" href="/login">Lets start</a>
+      </div>
+    </div>
+
+
+    <script>
+        function getHashParams() {
+          var hashParams = {};
+          var e, r = /([^&;=]+)=?([^&;]*)/g,
+              q = window.location.hash.substring(1);
+          while ( e = r.exec(q)) {
+             hashParams[e[1]] = decodeURIComponent(e[2]);
+          }
+          return hashParams;
+        }
+
+        var params = getHashParams();
+
+        var access_token = params.access_token,
+            refresh_token = params.refresh_token,
+            error = params.error;
+    </script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+    <script>
+      (function() {
+
+        /**
+         * Obtains parameters from the hash of the URL
+         * @return Object
+         */
+        function getHashParams() {
+          var hashParams = {};
+          var e, r = /([^&;=]+)=?([^&;]*)/g,
+              q = window.location.hash.substring(1);
+          while ( e = r.exec(q)) {
+             hashParams[e[1]] = decodeURIComponent(e[2]);
+          }
+          return hashParams;
+        }
+
+        var params = getHashParams();
+
+        var access_token = params.access_token,
+            refresh_token = params.refresh_token,
+            error = params.error;
+
+        if (error) {
+          alert('There was an error during the authentication');
+          $(".main").show();
+        } else {
+          if (access_token) {
+
+            $(".height-100").css('height', '0vh');
+            $('.login_container').hide();
+
+
+            $.ajax({
+                url: 'https://api.spotify.com/v1/me/top/tracks?limit=15',
+                headers: {
+                    'Authorization': 'Bearer ' + access_token
+                },
+                success: function(data) {
+                  for(let i = 0; i < data.items.length; i++){
+                    let number = i + 1;
+                    $( ".toptracks" ).append( "<div class='api_hover' style='display: flex; margin: 10px;'>" +
+                      "<img style='width: 50px; height: 50px; border-radius: 50%;' src=" + data.items[i].album.images[0].url + ">" +
+                      "<div style='width: 100%; display: flex; justify-content: space-between;'>" +
+                        "<p style='margin-top: 12px; margin-left: 20px;'>" + data.items[i].name + "</p>" +
+                        "<p style='margin-top: 12px; float: right;'>" + number + "</p>" +
+                        "</div>" +
+                        "</div>" );
+                  }
+                }
+            });
+
+
+            $.ajax({
+                url: 'https://api.spotify.com/v1/me/top/artists?limit=15',
+                headers: {
+                    'Authorization': 'Bearer ' + access_token
+                },
+                success: function(data) {
+                    for(let i = 0; i < data.items.length; i++){
+                      let number = i + 1;
+                      $( ".topartists" ).append( "<div class='api_hover' style='display: flex; margin: 10px;'>" +
+                        "<img style='width: 50px; height: 50px; border-radius: 50%;' src=" + data.items[i].images[0].url + ">" +
+                          "<div style='width: 100%; display: flex; justify-content: space-between;'>" +
+                          "<p style='margin-top: 12px; margin-left: 20px;'>" + data.items[i].name + "</p>" +
+                          "<p style='margin-top: 12px; float: right;'>" + number + "</p>" +
+                          "</div>" +
+                          "</div>" );
+                    }
+                }
+            });
+
+            $.ajax({
+                url: 'https://api.spotify.com/v1/me',
+                headers: {
+                    'Authorization': 'Bearer ' + access_token
+                },
+                success: function(data) {
+                    if(data.images[0].url !== null){
+                      $("#profilePic").attr("src", data.images[0].url);
+                    }
+
+                    $("#userName").html(data.display_name);
+                    $("#totalFollowers").html(data.followers.total);
+                    $("#country").html(data.country);
+                    //$("#country-img").attr("src", 'img/countries/' + data.country.toLowerCase() + '.png');
+                    $("#email").html(data.email);
+
+                    $("#productType").html(capitalizeFirstLetter(data.product));
+                }
+            });
+
+
+            function getData(url, callback) {
+              if (access_token && (state == null || state !== storedState)) {
+                  window.location = 'https://spotifystatistics.com';
+              } else {
+                  localStorage.removeItem(stateKey);
+                  $.ajax({
+                      url: url,
+                      headers: {
+                          'Authorization': 'Bearer ' + access_token
+                      },
+                      success: function (response) {
+                          callback(response);
+                      }
+                  });
+              }
+            }
+
+
+          } else {
+              // render initial screen
+              $('#login_container').show();
+              $('.main').show();
+              $('#login_container').hide();
+              $('.main').hide();
+          }
+        }
+      })();
+
+
+      function capitalizeFirstLetter(string) {
+          return string.charAt(0).toUpperCase() + string.slice(1);
+      }
+    </script>
+  </body>
+</html>
