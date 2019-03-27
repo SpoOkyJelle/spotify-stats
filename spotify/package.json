@@ -1,5 +1,5 @@
 {
-  "name": "Spotify Stats",
+  "name": "spotify-stats",
   "description": "A free webapp which gives you insights into how you listen to music.",
   "version": "1.0.0",
   "engines": {
