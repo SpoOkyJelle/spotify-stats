@@ -1,0 +1,24 @@
+{
+  "name": "Spotify Stats",
+  "description": "A free webapp which gives you insights into how you listen to music.",
+  "version": "1.0.0",
+  "engines": {
+    "node": "10.3.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SpoOkyJelle/spotify-stats.git"
+  },
+  "keywords": [
+    "spotify"
+  ],
+  "author": "Jelle Kootwijk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SpoOkyJelle/spotify-stats/issues"
+  },
+  "homepage": "https://github.com/SpoOkyJelle/spotify-stats#readme"
+}
