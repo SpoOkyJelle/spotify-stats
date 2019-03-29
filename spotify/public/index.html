@@ -127,13 +127,14 @@
           $(".main").show();
         } else {
           if (access_token) {
-
             $(".height-100").css('height', '0vh');
             $('.login_container').hide();
 
 
+            const limit = 15;
+
             $.ajax({
-                url: 'https://api.spotify.com/v1/me/top/tracks?limit=15',
+                url: 'https://api.spotify.com/v1/me/top/tracks?limit=' + limit,
                 headers: {
                     'Authorization': 'Bearer ' + access_token
                 },
@@ -141,7 +142,7 @@
                   for(let i = 0; i < data.items.length; i++){
                     let number = i + 1;
                     $( ".toptracks" ).append( "<div class='api_hover' style='display: flex; margin: 10px;'>" +
-                      "<img style='width: 50px; height: 50px; border-radius: 50%;' src=" + data.items[i].album.images[0].url + ">" +
+                      "<img style='min-width: 50px; height: 50px; border-radius: 50%;' src=" + data.items[i].album.images[0].url + ">" +
                       "<div style='width: 100%; display: flex; justify-content: space-between;'>" +
                         "<p style='margin-top: 12px; margin-left: 20px;'>" + data.items[i].name + "</p>" +
                         "<p style='margin-top: 12px; float: right;'>" + number + "</p>" +
@@ -153,7 +154,7 @@
 
 
             $.ajax({
-                url: 'https://api.spotify.com/v1/me/top/artists?limit=15',
+                url: 'https://api.spotify.com/v1/me/top/artists?limit=' + limit,
                 headers: {
                     'Authorization': 'Bearer ' + access_token
                 },
@@ -161,7 +162,7 @@
                     for(let i = 0; i < data.items.length; i++){
                       let number = i + 1;
                       $( ".topartists" ).append( "<div class='api_hover' style='display: flex; margin: 10px;'>" +
-                        "<img style='width: 50px; height: 50px; border-radius: 50%;' src=" + data.items[i].images[0].url + ">" +
+                        "<img style='min- width: 50px; height: 50px; border-radius: 50%;' src=" + data.items[i].images[0].url + ">" +
                           "<div style='width: 100%; display: flex; justify-content: space-between;'>" +
                           "<p style='margin-top: 12px; margin-left: 20px;'>" + data.items[i].name + "</p>" +
                           "<p style='margin-top: 12px; float: right;'>" + number + "</p>" +
@@ -190,24 +191,6 @@
                     $("#productType").html(capitalizeFirstLetter(data.product));
                 }
             });
-
-
-            function getData(url, callback) {
-              if (access_token && (state == null || state !== storedState)) {
-                  window.location = 'https://spotifystatistics.com';
-              } else {
-                  localStorage.removeItem(stateKey);
-                  $.ajax({
-                      url: url,
-                      headers: {
-                          'Authorization': 'Bearer ' + access_token
-                      },
-                      success: function (response) {
-                          callback(response);
-                      }
-                  });
-              }
-            }
 
 
           } else {
